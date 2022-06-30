@@ -9,8 +9,11 @@ public class Push : MonoBehaviour
 
  public bool m_OnCross;
 
+ public GameManager GameManager;
+
  void Start() 
  {
+  GameManager = GameObject.Find("Canvas").GetComponent<GameManager>();
    Obstacles = GameObject.FindGameObjectsWithTag("Obstacles");
    Boxes = GameObject.FindGameObjectsWithTag("Boxes");
  }
@@ -31,6 +34,7 @@ public class Push : MonoBehaviour
   {
     transform.Translate(direction);
     TestForOnCross();
+    LevelComplete();
     return true;
   }
  }
@@ -71,5 +75,18 @@ public class Push : MonoBehaviour
     }
     GetComponent<SpriteRenderer>().color = Color.white;
     m_OnCross = false;
+ }
+
+ void LevelComplete()
+ {
+  GameManager.errors = 0;
+  for(int i = 0; i <Boxes.Length ; ++i)
+  {
+    if(Boxes[i].GetComponent<Push>().m_OnCross == false)
+    {
+      GameManager.errors += 1;
+    }
+  }
+   GameManager.Win();
  }
 }
